@@ -1,0 +1,13 @@
+Python3
+String output in python in 0.03793597221374512
+JSON output in python in 0.1768791675567627
+Calculation output in python in 0.09267163276672363
+
+PyPy:
+String output in python in 0.00233793258667
+JSON output in python in 0.00297498703003
+Calculation output in python in 0.013885974884
+
+String 16x
+JSON 59x
+Calculation 6.5x

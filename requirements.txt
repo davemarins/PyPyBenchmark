@@ -1,0 +1,7 @@
+# virtualenv testing --distribute
+# source testing/bin/activate
+# deactivate
+cppyy==1.4.12
+cppyy-backend==1.9.0
+cppyy-cling==6.15.2.9
+CPyCppyy==1.8.2
