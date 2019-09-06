@@ -1,6 +1,10 @@
-from cppyy import cppdef
 import time
 import json
+# import numpy as np
+from flask import Flask
+from werkzeug.serving import run_simple
+
+app = Flask(__name__)
 
 # 1M operations comparison between C++ and Python
 # With small numbers, context switch time is prelevant
@@ -8,70 +12,60 @@ import json
 # Here's an example of string declaration and addition
 
 # Conclusions: Flask as microframework is enough, but when
-# you need to do a lot of calculation, C++ is the only way
-# Flask listens to requests, meanwhile a C++ programm is running
-# in background with a thread pool, some signal is passed through
-# OS, the programm does calculations and when exits, Flask
-# returns the correct reply to client(s)
+# you need to do a lot of calculation, a good JIT is needed
+# instead of interpreting all python scripts
+# PyPy is used in this case and results are very close (
+# sometimes even better) to C++, but in order to exploit JIT
+# you need the JIT with all requirements installed twice
 
-# Beware that C++ JSON is a dependency, package management
-# in Python is better handled
+# Performance-wise the use of JIT with Python is very beneficial,
+# but compared to Maven it's much more storage instensive and a
+# complete build will take much more time in a CI/CD environment
 
-"""
-cppdef(
-std::string hello() {
-	std::string s = "Hello Euro Python 2019!";
-	return s;
-}
-int calculate(int a, int b) {
-	return a + b;
-}
-)
-"""
+@app.route('/', methods=["GET"])
+def alive():
+    return 'I\'m alive!'
 
-with open('main.cpp', 'r') as myfile:
-	data = myfile.read()
-	cppdef(str(data))
-
-if __name__ == "__main__":
-	from cppyy.gbl import hello
-	from cppyy.gbl import calculate
-	from cppyy.gbl import json_out
-
-	start = time.time()
-	string = hello(1000000)
-	end = time.time()
-	print("String output in C++ in " + str(end - start))
-
+@app.route("/string", methods=["GET"])
+def stringBenchmark():
 	start = time.time()
 	for count in range(1, 1000000):
 		string = "Hello Euro Python 2019!"
 	end = time.time()
-	print("String output in python in " + str(end - start))
+	return "String output in python in " + str((end - start)*1000) + " ms"
 
-	start = time.time()
-	json_dump = json_out(1000000);
-	end = time.time()
-	print("JSON output in C++ in " + str(end - start))
-
+@app.route("/json/dumps", methods=["GET"])
+def jsonDumpsBenchmark():
 	start = time.time()
 	data = {}
 	for count in range(1, 1000000):
-		temp = {}
-		temp['userId'] = 1
-		temp['id'] = 1
-		temp['title'] = "delectus aut autem"
-		temp['completed'] = False
-		data = temp
-	data = json.dumps(data)
+		temp = {
+			'userID': 1,
+			'id': 1,
+			'title': 'delectus aut autem',
+			'completed': False
+		}
+		data = json.dumps(temp)
 	end = time.time()
-	print("JSON output in python in " + str(end - start))
+	return "JSON dumps in python in " + str((end - start)*1000) + " ms"
 
+@app.route("/json/loads", methods=["GET"])
+def jsonLoadsBenchmark():
+	temp = {
+		'userID': 1,
+		'id': 1,
+		'title': 'delectus aut autem',
+		'completed': False
+	}
+	data = json.dumps(temp)
 	start = time.time()
-	result = calculate(10, 2, 1000000)
+	for count in range(1, 1000000):
+		new_temp = json.loads(data)
 	end = time.time()
-	print("Addition output in C++ in " + str(end - start))
+	return "JSON loads in python in " + str((end - start)*1000) + " ms"
 
+@app.route("/calculation", methods=["GET"])
+def calculationBenchmark():
 	start = time.time()
 	result = 1
 	for count in range(1, 1000000):
@@ -80,4 +74,19 @@ if __name__ == "__main__":
 		else:
 			result = (10 * 2) / result
 	end = time.time()
-	print("Addition output in python in " + str(end - start))
+	return "Calculation output in python in " + str((end - start)*1000) + " ms"
+
+"""
+@app.route("/numpy", methods=["GET"])
+def numpyBenchmark():
+	start = time.time()
+	for count in range(1, 1000000):
+		a = np.array([[1, 2, 3],[4, 5, 6],[7, 8, 9]])
+		b = np.array([[9, 8, 7],[6, 5, 4],[3, 2, 1]])
+		c = np.matmul(a, b)
+	end = time.time()
+	return "Numpy output in python in " + str(end - start)
+"""
+
+if __name__ == '__main__':
+    run_simple('localhost', 5000, app)

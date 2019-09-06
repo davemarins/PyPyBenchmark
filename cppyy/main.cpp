@@ -1,7 +1,11 @@
 #include <string>
 #include <chrono>
 #include <iostream>
-#include <nlohmann/json.hpp>
+ #include <nlohmann/json.hpp>
+ 
+using json = nlohmann::json;
+
+#define TIMES 1000000
 
 using namespace std;
 using json = nlohmann::json;
@@ -46,4 +50,11 @@ std::string json_out(int times) {
 	auto duration = std::chrono::duration_cast<std::chrono::microseconds>(stop - start);
 	std::cout << "Time duration of JSON build in C++ without context switch: " << duration.count() << " microseconds" << endl;
 	return j.dump(4); // pretty printing - 4 spaces = 1 tab
+}
+
+int main(int argc, char *argv[]) {
+	string json = json_out(TIMES);
+	int calculation = calculate(2, 10, TIMES);
+	string word = hello(TIMES);
+	return 0;
 }

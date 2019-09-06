@@ -1,13 +1,38 @@
 Python3
-String output in python in 0.03793597221374512
-JSON output in python in 0.1768791675567627
-Calculation output in python in 0.09267163276672363
+String output in python in 30ms
+JSON dumps in python in 3.7s
+JSON loads in python in 4.5s
+Calculation output in python in 110m
 
 PyPy:
-String output in python in 0.00233793258667
-JSON output in python in 0.00297498703003
-Calculation output in python in 0.013885974884
+String output in python in 2ms
+JSON dumps in python in 859ms
+JSON loads in python in 890ms
+Calculation output in python in 4ms
 
-String 16x
-JSON 59x
-Calculation 6.5x
+Spring
+String output in Spring in 2ms
+JSON marshalling in Spring in 158ms
+JSON unmarshalling in Spring in 2.1s
+Calculation output in Spring in 10ms
+
+PHP
+
+String output in PHP in 14ms
+JSON encode in PHP in 260ms
+JSON decode in PHP in 705ms
+Calculation output in PHP in 35ms
+
+Node - Not so sure about results...
+
+String output in Node in 1ms
+JSON parse in Node in 765ms
+JSON stringify in Node in 632ms
+Calculation output in Node in 11ms
+
+.NET
+
+String output in Node in 3ms
+JSON encode in Node in 1.5ms
+JSON decode in Node in 1.2ms
+Calculation output in Node in 9ms
