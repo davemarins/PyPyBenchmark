@@ -12,3 +12,7 @@ PyPy
 wget https://bootstrap.pypa.io/get-pip.py
 pypy3 get-pip.py
 pypy3 -m pip install <packages> --user
+
+Docker
+
+Python Docker Hub 3.7.4-alpine
