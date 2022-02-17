@@ -18,7 +18,7 @@ pathtools==0.1.2
 pycparser==2.17
 PyJWT==1.4.2
 PyYAML==5.1.2
-Sanic==0.1.9
+Sanic==20.12.6
 six==1.10.0
 SQLAlchemy==1.3.8
 ujson==1.35
